@@ -1,0 +1,108 @@
+﻿@model MedicalAppointmentSystem.ViewModels.PatientDashboardViewModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Appointments</h5>
+                <p class="card-text display-4">@Model.TotalAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming</h5>
+                <p class="card-text display-4">@Model.UpcomingAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Pending Payments</h5>
+                <p class="card-text display-4">@Model.PendingPayments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">Quick Actions</h5>
+
+                <a href="@Url.Action("Payments")" class="btn btn-light btn-sm mb-2">Make Payment</a>
+                <!-- Add this line for feedback -->
+                <a href="@Url.Action("Feedback")" class="btn btn-light btn-sm">Give Feedback</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Appointments</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentAppointments != null && Model.RecentAppointments.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var appointment in Model.RecentAppointments)
+                                {
+                                    <tr>
+                                        <td>Dr. @(appointment.Doctor?.User?.Name ?? "Unknown")</td>
+                                        <td>@(appointment.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                        <td>
+                                            @if (appointment.StartTime.HasValue && appointment.EndTime.HasValue)
+                                            {
+                                                @($"{appointment.StartTime.Value.ToString(@"hh\:mm")} - {appointment.EndTime.Value.ToString(@"hh\:mm")}")
+                                            }
+                                            else
+                                            {
+                                                @:N/A
+                                            }
+                                        </td>
+                                        <td>@(appointment.Location ?? "N/A")</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(appointment.Status))
+                                            {
+                                                <span class="badge badge-@(appointment.Status == "confirmed" ? "success" :
+                                                                           appointment.Status == "cancelled" ? "danger" :
+                                                                           appointment.Status == "completed" ? "info" : "warning")">
+                                                    @appointment.Status
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">Unknown</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No appointments found.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

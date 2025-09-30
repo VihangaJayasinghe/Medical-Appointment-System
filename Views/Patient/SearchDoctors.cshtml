@@ -1,0 +1,96 @@
+﻿@model MedicalAppointmentSystem.ViewModels.DoctorSearchViewModel
+@{
+    ViewData["Title"] = "Find a Doctor";
+}
+
+<h2>Find a Doctor</h2>
+
+<form method="get" class="card card-body mb-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Specialty</label>
+                <select name="specialty" class="form-control">
+                    <option value="">All Specialties</option>
+                    @foreach (var specialty in ViewBag.Specialties)
+                    {
+                        <option value="@specialty" selected="@(Model.Specialty == specialty)">@specialty</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Location</label>
+                <select name="location" class="form-control">
+                    <option value="">All Locations</option>
+                    @foreach (var location in ViewBag.Locations)
+                    {
+                        <option value="@location" selected="@(Model.Location == location)">@location</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Day Available</label>
+                <select name="day" class="form-control">
+                    <option value="">Any Day</option>
+                    @foreach (var day in ViewBag.Days)
+                    {
+                        <option value="@day" selected="@(Model.Day == day)">@day</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block">Search Doctors</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (Model.Doctors.Any())
+{
+    <div class="row">
+        @foreach (var doctor in Model.Doctors)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dr. @doctor.User?.Name</h5>
+                        <p class="card-text">
+                            <strong>Specialty:</strong> @doctor.Specialty<br>
+                            <strong>Fee:</strong> $@doctor.ConsultationFee?.ToString("0.00")<br>
+                            <strong>Bio:</strong> @doctor.Bio
+                        </p>
+
+                        @if (doctor.DoctorAvailabilities != null && doctor.DoctorAvailabilities.Any())
+                        {
+                            <div class="availability">
+                                <strong>Available at:</strong>
+                                <ul class="list-unstyled">
+                                    @foreach (var availability in doctor.DoctorAvailabilities.Take(2))
+                                    {
+                                        <li><small>@availability.Day: @availability.StartTime?.ToString(@"hh\:mm") at @availability.Location</small></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        
+                        <a href="@Url.Action("SelectDoctor", new { id = doctor.Id })" class="btn btn-success">Book Appointment</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No doctors found matching your criteria. Please try different search terms.
+    </div>
+}

@@ -1,0 +1,138 @@
+﻿@model MedicalAppointmentSystem.Models.AdminReportViewModel
+@{
+    ViewData["Title"] = "System Reports";
+}
+
+<h2>System Reports & Statistics</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Appointments</h5>
+                <p class="card-text display-4">@Model.TotalAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <p class="card-text display-4">@Model.CompletedAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Cancelled</h5>
+                <p class="card-text display-4">@Model.CancelledAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <p class="card-text display-4">$@Model.TotalRevenue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Appointment Statistics</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.AppointmentStats.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var stat in Model.AppointmentStats)
+                                {
+                                    <tr>
+                                        <td>@stat.Key</td>
+                                        <td>@stat.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No appointment data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Revenue by Doctor</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RevenueByDoctor.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Doctor</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revenue in Model.RevenueByDoctor)
+                                {
+                                    <tr>
+                                        <td>@revenue.Key</td>
+                                        <td>$@revenue.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No revenue data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Export Reports</h5>
+            </div>
+            <div class="card-body">
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-download"></i> Export Appointments CSV
+                    </button>
+                    <button class="btn btn-outline-success">
+                        <i class="fas fa-download"></i> Export Financial Report
+                    </button>
+                    <button class="btn btn-outline-info">
+                        <i class="fas fa-download"></i> Export Patient List
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

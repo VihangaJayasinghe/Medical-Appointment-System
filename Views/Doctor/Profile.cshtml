@@ -1,0 +1,91 @@
+﻿@model MedicalAppointmentSystem.ViewModels.DoctorProfileViewModel
+@{
+    ViewData["Title"] = "Doctor Profile";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Update Profile</h4>
+            </div>
+            <div class="card-body">
+                <!-- Success/Error Messages -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+
+                <form asp-action="UpdateProfile" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Hidden fields for IDs -->
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Specialty"></label>
+                        <input asp-for="Specialty" class="form-control" />
+                        <span asp-validation-for="Specialty" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConsultationFee"></label>
+                        <input asp-for="ConsultationFee" type="number" step="0.01" class="form-control" />
+                        <span asp-validation-for="ConsultationFee" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Bio"></label>
+                        <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Tell patients about your experience and expertise..."></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Profile
+                        </button>
+                        <a href="@Url.Action("Dashboard")" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Clear success message after 3 seconds
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert-success').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}

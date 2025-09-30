@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Welcome, @ViewBag.PatientName!</h2>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@ViewBag.TotalAppointments</h5>
+                <p class="card-text">Total Appointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@ViewBag.UpcomingAppointments.Count</h5>
+                <p class="card-text">Upcoming Appointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@ViewBag.PendingPayments</h5>
+                <p class="card-text">Pending Payments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Upcoming Appointments</h5>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.UpcomingAppointments.Count > 0)
+                {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Doctor</th>
+                                        <th>Specialty</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var appointment in ViewBag.UpcomingAppointments)
+                                {
+                                            <tr>
+                                                <td>@appointment.AppointmentDate?.ToString("yyyy-MM-dd")</td>
+                                                <td>@appointment.StartTime - @appointment.EndTime</td>
+                                                <td>Dr. @appointment.Doctor?.User?.Name</td>
+                                                <td>@appointment.Doctor?.Specialty</td>
+                                                <td>@appointment.Location</td>
+                                                <td>
+                                                    <span class="badge bg-@(appointment.Status == "confirmed" ? "success" : "warning")">
+                                                @appointment.Status
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                }
+                else
+                {
+                        <p>No upcoming appointments. <a href="@Url.Action("SearchDoctors", "Patient")">Book your first appointment!</a></p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="@Url.Action("SearchDoctors", "Patient")" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Find Doctors
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="@Url.Action("MyAppointments", "Patient")" class="btn btn-info btn-block">
+                            <i class="fas fa-calendar"></i> My Appointments
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="@Url.Action("MyPayments", "Patient")" class="btn btn-warning btn-block">
+                            <i class="fas fa-credit-card"></i> Payments
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="@Url.Action("MedicalRecords", "Patient")" class="btn btn-success btn-block">
+                            <i class="fas fa-file-medical"></i> Medical Records
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-controller="Account" asp-action="Logout" method="post" class="mt-4">
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>

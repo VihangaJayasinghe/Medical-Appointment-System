@@ -1,0 +1,101 @@
+﻿@model MedicalAppointmentSystem.ViewModels.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Confirm Appointment";
+}
+
+<div class="container">
+    <h2>Confirm Your Appointment</h2>
+
+    <!-- Debug info (remove in production) -->
+    <div class="alert alert-info d-none" id="debugInfo">
+        <strong>Debug Info:</strong><br>
+        DoctorId: @Model.DoctorId<br>
+        AppointmentDate: @Model.AppointmentDate<br>
+        StartTime: @Model.StartTime<br>
+        SelectedLocation: @Model.SelectedLocation
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Appointment Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="confirmForm">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Ensure all hidden fields have values -->
+                        <input type="hidden" asp-for="DoctorId" value="@Model.DoctorId" />
+                        <input type="hidden" asp-for="DoctorName" value="@Model.DoctorName" />
+                        <input type="hidden" asp-for="ConsultationFee" value="@Model.ConsultationFee" />
+                        <input type="hidden" asp-for="SelectedLocation" value="@Model.SelectedLocation" />
+                        <input type="hidden" asp-for="AppointmentDate" value="@Model.AppointmentDate?.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" asp-for="StartTime" value="@Model.StartTime" />
+
+                        <div class="row">
+                            <div class="col-6">
+                                <p><strong>Doctor:</strong></p>
+                                <p><strong>Date:</strong></p>
+                                <p><strong>Time:</strong></p>
+                                <p><strong>Location:</strong></p>
+                                <p><strong>Duration:</strong></p>
+                                <p><strong>Fee:</strong></p>
+                            </div>
+                            <div class="col-6">
+                                <p>Dr. @Model.DoctorName</p>
+                                <p>@Model.AppointmentDate.Value.ToString("dddd, MMMM dd, yyyy")</p>
+                                <p>@Model.StartTime.Value.ToString(@"hh\:mm") - @Model.StartTime.Value.Add(new TimeSpan(0, 30, 0)).ToString(@"hh\:mm")</p>
+                                <p>@Model.SelectedLocation</p>
+                                <p>30 minutes</p>
+                                <p>$@Model.ConsultationFee.ToString("0.00")</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsAgreement" required>
+                                <label class="form-check-label" for="termsAgreement">
+                                    I understand that cancellations must be made at least 24 hours in advance.
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg" onclick="return validateForm()">Confirm Booking</button>
+                        <a href="@Url.Action("SelectDateTime", new { doctorId = Model.DoctorId, location = Model.SelectedLocation })"
+                           class="btn btn-secondary">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function validateForm() {
+            const agreement = document.getElementById('termsAgreement');
+            if (!agreement.checked) {
+                alert('Please agree to the cancellation terms.');
+                return false;
+            }
+
+            // Debug: log form values before submission
+            console.log('Submitting form with values:');
+            console.log('DoctorId:', document.querySelector('[name="DoctorId"]').value);
+            console.log('AppointmentDate:', document.querySelector('[name="AppointmentDate"]').value);
+            console.log('StartTime:', document.querySelector('[name="StartTime"]').value);
+            console.log('SelectedLocation:', document.querySelector('[name="SelectedLocation"]').value);
+
+            return true;
+        }
+
+        // Show debug info on Ctrl+D
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                document.getElementById('debugInfo').classList.toggle('d-none');
+            }
+        });
+    </script>
+}

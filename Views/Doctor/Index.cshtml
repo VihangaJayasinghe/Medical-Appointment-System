@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2>Welcome, Dr. @ViewBag.UserName!</h2>
+
+<p>This is the doctor dashboard. You can view appointments, update availability, and manage patient notes here.</p>
+
+<form asp-controller="Account" asp-action="Logout" method="post">
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>

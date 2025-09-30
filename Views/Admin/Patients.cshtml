@@ -1,0 +1,50 @@
+﻿@model List<MedicalAppointmentSystem.Models.Patient>
+@{
+    ViewData["Title"] = "Manage Patients";
+}
+
+<h2>Manage Patients</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5>All Patients</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>Phone</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var patient in Model)
+                        {
+                            <tr>
+                                <td>@patient.User?.Name</td>
+                                <td>@patient.User?.Email</td>
+                                <td>@(patient.Age?.ToString() ?? "N/A")</td>
+                                <td>@(patient.Phone ?? "N/A")</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No patients found</h5>
+                <p>No patients have registered yet.</p>
+            </div>
+        }
+    </div>
+</div>

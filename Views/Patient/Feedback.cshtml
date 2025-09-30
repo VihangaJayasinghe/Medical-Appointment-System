@@ -1,0 +1,92 @@
+﻿@model MedicalAppointmentSystem.ViewModels.FeedbackViewModel
+@{
+    ViewData["Title"] = "Provide Feedback";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Provide Feedback</h4>
+            </div>
+            <div class="card-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+
+                <form asp-action="Feedback" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Doctor Selection -->
+                    <div class="form-group">
+                        <label asp-for="SelectedDoctorId" class="control-label">Doctor (Optional)</label>
+                        <select asp-for="SelectedDoctorId" asp-items="Model.Doctors" class="form-control">
+                        </select>
+                        <span asp-validation-for="SelectedDoctorId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="form-group">
+                        <label asp-for="Rating" class="control-label">Rating *</label>
+                        <div>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" asp-for="Rating" value="@i" id="rating@i">
+                                    <label class="form-check-label" for="rating@i">
+                                        @for (int j = 0; j < i; j++)
+                                        {
+                                            <span class="text-warning">★</span>
+                                        }
+                                        (@i)
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                    </div>
+
+                    <!-- Comment -->
+                    <div class="form-group">
+                        <label asp-for="Comment" class="control-label">Comments (Optional)</label>
+                        <textarea asp-for="Comment" class="form-control" rows="4"
+                                  placeholder="Share your experience..."></textarea>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane"></i> Submit Feedback
+                        </button>
+                        <a href="@Url.Action("Dashboard")" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Add some interactivity
+        $(document).ready(function() {
+            // Highlight selected rating
+            $('input[type=radio][name=Rating]').change(function() {
+                $('.form-check-label').css('opacity', '0.6');
+                $(this).next().css('opacity', '1');
+            });
+        });
+    </script>
+}

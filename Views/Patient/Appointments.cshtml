@@ -1,0 +1,201 @@
+﻿@model List<MedicalAppointmentSystem.Models.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<h2>My Appointments</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h5>All Appointments</h5>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model)
+                        {
+                            <tr>
+                                <td>Dr. @(appointment.Doctor?.User?.Name ?? "Unknown")</td>
+                                <td>@(appointment.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                <td>
+                                    @if (appointment.StartTime.HasValue && appointment.EndTime.HasValue)
+                                    {
+                                        @($"{appointment.StartTime.Value.ToString(@"hh\:mm")} - {appointment.EndTime.Value.ToString(@"hh\:mm")}")
+                                    }
+                                    else
+                                    {
+                                        @:N/A
+                                    }
+                                </td>
+                                <td>@(appointment.Location ?? "N/A")</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(appointment.Status))
+                                    {
+                                        <span class="badge badge-@(appointment.Status == "confirmed" ? "success" :
+                                                                   appointment.Status == "cancelled" ? "danger" :
+                                                                   appointment.Status == "completed" ? "info" : "warning")">
+                                            @appointment.Status?.ToUpper()
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">UNKNOWN</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (appointment.Status != "cancelled" && appointment.Status != "completed")
+                                    {
+                                        @if (appointment.AppointmentDate >= DateTime.Today)
+                                        {
+                                            <form asp-action="CancelAppointment" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@appointment.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        }
+                                        <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailsModal-@appointment.Id">
+                                            Details
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No actions</span>
+                                    }
+                                </td>
+                            </tr>
+
+     
+                            <div class="modal fade" id="detailsModal-@appointment.Id" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Appointment Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span>&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p><strong>Doctor:</strong></p>
+                                                    <p><strong>Specialty:</strong></p>
+                                                    <p><strong>Date:</strong></p>
+                                                    <p><strong>Time:</strong></p>
+                                                    <p><strong>Location:</strong></p>
+                                                    <p><strong>Status:</strong></p>
+                                                    <p><strong>Duration:</strong></p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p>Dr. @(appointment.Doctor?.User?.Name ?? "Unknown")</p>
+                                                    <p>@(appointment.Doctor?.Specialty ?? "N/A")</p>
+                                                    <p>@(appointment.AppointmentDate?.ToString("dddd, MMMM dd, yyyy") ?? "N/A")</p>
+                                                    <p>
+                                                        @if (appointment.StartTime.HasValue && appointment.EndTime.HasValue)
+                                                        {
+                                                            @($"{appointment.StartTime.Value.ToString(@"hh\:mm")} - {appointment.EndTime.Value.ToString(@"hh\:mm")}")
+                                                        }
+                                                        else
+                                                        {
+                                                            @:N/A
+                                                        }
+                                                    </p>
+                                                    <p>@(appointment.Location ?? "N/A")</p>
+                                                    <p>
+                                                        <span class="badge badge-@(appointment.Status == "confirmed" ? "success" :
+                                                                                   appointment.Status == "cancelled" ? "danger" :
+                                                                                   appointment.Status == "completed" ? "info" : "warning")">
+                                                            @appointment.Status?.ToUpper()
+                                                        </span>
+                                                    </p>
+                                                    <p>30 minutes</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            @if (appointment.Status != "cancelled" && appointment.Status != "completed" && appointment.AppointmentDate >= DateTime.Today)
+                                            {
+                                                <form asp-action="CancelAppointment" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@appointment.Id" />
+                                                    <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                                        Cancel Appointment
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="btn-group mb-3" role="group">
+                <a href="@Url.Action("Appointments", new { filter = "upcoming" })"
+                   class="btn btn-outline-primary @(ViewBag.Filter == "upcoming" ? "active" : "")">
+                    Upcoming
+                </a>
+                <a href="@Url.Action("Appointments", new { filter = "past" })"
+                   class="btn btn-outline-secondary @(ViewBag.Filter == "past" ? "active" : "")">
+                    Past
+                </a>
+                <a href="@Url.Action("Appointments", new { filter = "cancelled" })"
+                   class="btn btn-outline-danger @(ViewBag.Filter == "cancelled" ? "active" : "")">
+                    Cancelled
+                </a>
+                <a href="@Url.Action("Appointments")"
+                   class="btn btn-outline-info @(ViewBag.Filter == null ? "active" : "")">
+                    All Appointments
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No appointments found</h5>
+                <p>You haven't booked any appointments yet.</p>
+                <a href="@Url.Action("SearchDoctors")" class="btn btn-primary">Book Your First Appointment</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            $('[data-toggle="modal"]').click(function() {
+                var target = $(this).data('target');
+                $(target).modal('show');
+            });
+        });
+    </script>
+}

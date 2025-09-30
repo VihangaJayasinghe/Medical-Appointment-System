@@ -1,0 +1,50 @@
+﻿@model MedicalAppointmentSystem.Models.PatientNotesViewModel
+@{
+    var appointment = ViewBag.Appointment as MedicalAppointmentSystem.Models.Appointment;
+    ViewData["Title"] = "Patient Consultation Notes";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Consultation Notes for @(appointment?.Patient?.User?.Name ?? "Patient")</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <<strong>Appointment Date:</strong> @(appointment?.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")<br>
+                    <strong>Time:</strong> @(appointment?.StartTime?.ToString(@"hh\:mm") ?? "N/A")<br>
+
+                    <strong>Location:</strong> @appointment?.Location
+                </div>
+
+                <form asp-action="SavePatientNotes" method="post">
+                    <input type="hidden" asp-for="AppointmentId" />
+
+                    <div class="form-group">
+                        <label asp-for="Notes">Consultation Notes *</label>
+                        <textarea asp-for="Notes" class="form-control" rows="6"
+                                  placeholder="Enter detailed consultation notes..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Prescription">Prescription (Optional)</label>
+                        <textarea asp-for="Prescription" class="form-control" rows="3"
+                                  placeholder="Enter prescription details..."></textarea>
+                        <span asp-validation-for="Prescription" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Save Notes</button>
+                    <a href="@Url.Action("Appointments")" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

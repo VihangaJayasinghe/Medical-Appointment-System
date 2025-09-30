@@ -1,0 +1,164 @@
+﻿@model MedicalAppointmentSystem.ViewModels.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Select Date and Time";
+    var doctor = ViewBag.Doctor as MedicalAppointmentSystem.Models.Doctor;
+    var availability = ViewBag.Availability as List<MedicalAppointmentSystem.Models.DoctorAvailability>;
+}
+
+<div class="container">
+    <h2>Select Date and Time with Dr. @doctor.User?.Name</h2>
+    }<style>
+         .status-badge {
+             color: black !important;
+             font-weight: 600;
+         }
+
+         .status-confirmed {
+             background-color: #28a745; /* Green */
+         }
+
+         .status-cancelled {
+             background-color: #dc3545; /* Red */
+         }
+
+         .status-completed {
+             background-color: #17a2b8; /* Blue */
+         }
+
+         .status-pending, .status-unknown {
+             background-color: #ffc107; /* Yellow */
+         }
+    </style>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Available Time Slots at @Model.SelectedLocation</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="bookingForm">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="DoctorId" />
+                        <input type="hidden" asp-for="DoctorName" />
+                        <input type="hidden" asp-for="ConsultationFee" />
+                        <input type="hidden" asp-for="SelectedLocation" />
+
+                        <div class="form-group">
+                            <label asp-for="AppointmentDate">Select Date</label>
+                            <input asp-for="AppointmentDate" type="date" class="form-control"
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   max="@DateTime.Today.AddDays(30).ToString("yyyy-MM-dd")"
+                                   required />
+                            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                        </div>
+
+
+                        @if (Model.AppointmentDate.HasValue)
+                        {
+                            var dayOfWeek = Model.AppointmentDate.Value.DayOfWeek.ToString();
+                            var dayAvailability = availability?.FirstOrDefault(a =>
+                            a.Day != null &&
+                            a.Day.Equals(dayOfWeek, StringComparison.OrdinalIgnoreCase));
+
+                            if (dayAvailability != null && dayAvailability.StartTime.HasValue && dayAvailability.EndTime.HasValue)
+                            {
+                                <div class="form-group">
+                                    <label>Select Time (30-minute slots):</label>
+                                    <div class="time-slots">
+                                        @{
+                                            var currentTime = dayAvailability.StartTime.Value;
+                                            while (currentTime < dayAvailability.EndTime.Value)
+                                            {
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                           asp-for="StartTime" value="@currentTime"
+                                                           id="time_@currentTime.ToString("hhmm")"
+                                                           required />
+                                                    <label class="form-check-label" for="time_@currentTime.ToString("hhmm")">
+                                                        @currentTime.ToString(@"hh\:mm")
+                                                    </label>
+                                                </div>
+                                                currentTime = currentTime.Add(new TimeSpan(0, 30, 0));
+                                            }
+                                        }
+                                    </div>
+                                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Continue to Confirmation</button>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <p>Doctor is not available on @dayOfWeek at @Model.SelectedLocation.</p>
+                                    <p>Available days at this location:</p>
+                                    <ul>
+                                        @if (availability != null)
+                                        {
+                                            foreach (var day in availability.Select(a => a.Day).Distinct())
+                                            {
+                                                <li>@day</li>
+                                            }
+                                        }
+                                    </ul>
+                                    <p>Please choose another date.</p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <p>Please select a date first to see available time slots.</p>
+                            </div>
+                        }
+
+                        <a href="@Url.Action("SelectDoctor", new { id = Model.DoctorId })" class="btn btn-secondary">Back</a>
+                    </form>
+                </div>
+            </div>
+            <p class="timeSlotError" > <font>This slot is no longer available.</font></p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Appointment Summary</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Doctor:</strong> Dr. @Model.DoctorName</p>
+                    <p><strong>Specialty:</strong> @doctor.Specialty</p>
+                    <p><strong>Location:</strong> @Model.SelectedLocation</p>
+                    <p><strong>Fee:</strong> $@Model.ConsultationFee.ToString("0.00")</p>
+
+                    <h6>Available Days at this location:</h6>
+                    @if (availability != null && availability.Any())
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var day in availability.Select(a => a.Day).Distinct())
+                            {
+                                <li>@day</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No availability set for this location</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Simple date change handler - no auto-submit
+            $('#AppointmentDate').change(function() {
+                // Just reload the page to show available times for the selected date
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
+}

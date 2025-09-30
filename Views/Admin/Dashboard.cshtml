@@ -1,0 +1,100 @@
+﻿@model MedicalAppointmentSystem.Models.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Doctors</h5>
+                <p class="card-text display-4">@Model.TotalDoctors</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Patients</h5>
+                <p class="card-text display-4">@Model.TotalPatients</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Appointments</h5>
+                <p class="card-text display-4">@Model.TotalAppointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <p class="card-text display-4">$@Model.TotalRevenue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Appointments</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentAppointments.Any())
+                {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var appointment in Model.RecentAppointments)
+                                {
+                                            <tr>
+                                                <td>@(appointment.Patient?.User?.Name ?? "Unknown")</td>
+                                                <td>Dr. @(appointment.Doctor?.User?.Name ?? "Unknown")</td>
+                                                <td>@(appointment.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                                <td>
+                                            @if (appointment.StartTime.HasValue)
+                                            {
+                                                @appointment.StartTime.Value.ToString(@"hh\:mm")
+                                            }
+                                            else
+                                            {
+                                                @:N/A
+                                            }
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-@(appointment.Status == "confirmed" ? "success" :
+                                                                       appointment.Status == "cancelled" ? "danger" :
+                                                                       appointment.Status == "completed" ? "info" : "warning")">
+                                                @appointment.Status?.ToUpper()
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                }
+                else
+                {
+                        <p class="text-muted">No recent appointments.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

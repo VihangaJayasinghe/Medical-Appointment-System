@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Manage Availability";
+    var doctor = ViewBag.Doctor as MedicalAppointmentSystem.Models.Doctor;
+    var days = ViewBag.Days as string[];
+}
+
+<h2>Manage Availability for Dr. @doctor.User?.Name</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Add New Availability</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddAvailability" method="post">
+                    <input type="hidden" name="DoctorId" value="@doctor.Id" />
+
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select name="Day" class="form-control" required>
+                            <option value="">Select Day</option>
+                            @foreach (var day in days)
+                            {
+                                <option value="@day">@day</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" name="StartTime" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" name="EndTime" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" name="Location" class="form-control" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add Availability</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Current Availability</h5>
+            </div>
+            <div class="card-body">
+                @if (doctor.DoctorAvailabilities.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var availability in doctor.DoctorAvailabilities)
+                                {
+                                    <tr>
+                                        <td>@availability.Day</td>
+                                        <td>@availability.StartTime?.ToString(@"hh\:mm") - @availability.EndTime?.ToString(@"hh\:mm")</td>
+                                        <td>@availability.Location</td>
+                                        <td>
+                                            <form asp-action="DeleteAvailability" method="post">
+                                                <input type="hidden" name="id" value="@availability.Id" />
+                                                <input type="hidden" name="doctorId" value="@doctor.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Remove this availability?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No availability set for this doctor.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="@Url.Action("Doctors")" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Doctors
+    </a>
+</div>

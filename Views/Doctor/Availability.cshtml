@@ -1,0 +1,100 @@
+﻿@model List<MedicalAppointmentSystem.Models.DoctorAvailability>
+@{
+    ViewData["Title"] = "Manage Availability";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Current Availability</h4>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Location</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var availability in Model)
+                                {
+                                    <tr>
+                                        <td>@availability.Day</td>
+                                        <td>
+                                            @(availability.StartTime?.ToString(@"hh\:mm") ?? "N/A")
+                                            -
+                                            @(availability.EndTime?.ToString(@"hh\:mm") ?? "N/A")
+                                        </td>
+
+                                        <td>@availability.Location</td>
+                                        <td>
+                                            <form asp-action="DeleteAvailability" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@availability.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this availability?')">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No availability slots added yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Add New Availability</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddAvailability" method="post">
+                    <div class="form-group">
+                        <label for="Day">Day</label>
+                        <select name="Day" class="form-control" required>
+                            <option value="">Select Day</option>
+                            @foreach (var day in ViewBag.Days)
+                            {
+                                <option value="@day">@day</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="StartTime">Start Time</label>
+                        <input type="time" name="StartTime" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="EndTime">End Time</label>
+                        <input type="time" name="EndTime" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Location">Location</label>
+                        <input type="text" name="Location" class="form-control" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Add Availability</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("Dashboard")" class="btn btn-secondary mt-3">Back to Dashboard</a>

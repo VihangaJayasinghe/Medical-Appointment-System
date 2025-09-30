@@ -1,0 +1,52 @@
+﻿@model MedicalAppointmentSystem.ViewModels.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Select Doctor";
+    var doctor = ViewBag.Doctor as MedicalAppointmentSystem.Models.Doctor;
+}
+
+<div class="container">
+    <h2>Select Doctor: Dr. @doctor.User?.Name</h2>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Doctor Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Dr. @doctor.User?.Name</h5>
+                    <p><strong>Specialty:</strong> @doctor.Specialty</p>
+                    <p><strong>Consultation Fee:</strong> $@doctor.ConsultationFee?.ToString("0.00")</p>
+                    <p><strong>Bio:</strong> @doctor.Bio</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Available Locations</h5>
+                    @if (doctor.DoctorAvailabilities != null && doctor.DoctorAvailabilities.Any())
+                    {
+                        var locations = doctor.DoctorAvailabilities
+                        .Select(da => da.Location)
+                        .Distinct()
+                        .ToList();
+
+                        foreach (var location in locations)
+                        {
+                            <div class="mb-2">
+                                <strong>@location</strong>
+                                <a href="@Url.Action("SelectDateTime", new { doctorId = doctor.Id, location = location })"
+                                   class="btn btn-primary btn-sm ml-2">Book at this location</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No availability information.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="@Url.Action("SearchDoctors")" class="btn btn-secondary">← Back to Search</a>
+    </div>
+</div>

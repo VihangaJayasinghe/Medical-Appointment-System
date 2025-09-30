@@ -1,0 +1,435 @@
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --info-color: #0dcaf0;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --medicare-blue: #1a76d2;
+    --medicare-light-blue: #e8f4fd;
+}
+
+html {
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(26, 118, 210, 0.25);
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Header and Navigation */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.bg-primary {
+    background-color: var(--medicare-blue) !important;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--medicare-blue);
+    border-color: var(--medicare-blue);
+}
+
+    .btn-primary:hover {
+        background-color: #1565c0;
+        border-color: #1565c0;
+    }
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+/* Form Styles */
+.form-control {
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .form-control:focus {
+        border-color: var(--medicare-blue);
+        box-shadow: 0 0 0 0.2rem rgba(26, 118, 210, 0.25);
+    }
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.input-group .form-control {
+    border-left: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+    .input-group .form-control:focus {
+        border-left: none;
+        box-shadow: none;
+    }
+
+.input-group:focus-within .input-group-text {
+    border-color: var(--medicare-blue);
+    color: var(--medicare-blue);
+}
+
+/* Validation Styles */
+.text-danger {
+    font-size: 0.875rem;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--medicare-blue) !important;
+}
+
+    footer a {
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+/* Utility Classes */
+.rounded-top {
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+/* Feedback page styles */
+.form-check-input:checked + .form-check-label {
+    opacity: 1 !important;
+    font-weight: bold;
+}
+
+.form-check-label {
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+    .form-check-label:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+.text-warning {
+    color: var(--warning-color) !important;
+    font-size: 1.2em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem !important;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0;
+    }
+}
+/* Dashboard specific styles */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+.badge {
+    font-weight: 500;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(26, 118, 210, 0.04);
+}
+
+.btn-rounded {
+    border-radius: 50px;
+}
+
+/* Status badges */
+.badge.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--info-color) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+/* Icon backgrounds */
+.bg-primary-opacity-10 {
+    background-color: rgba(26, 118, 210, 0.1) !important;
+}
+
+.bg-success-opacity-10 {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.bg-warning-opacity-10 {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.bg-info-opacity-10 {
+    background-color: rgba(13, 202, 240, 0.1) !important;
+}
+
+/* Responsive adjustments for dashboard */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .card-body {
+        padding: 1.5rem !important;
+    }
+
+    .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+/* Appointments specific styles */
+.appointment-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .appointment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+/* Status badges for appointments */
+.badge.bg-success {
+    background: linear-gradient(45deg, var(--success-color), #0f6848) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(45deg, var(--warning-color), #d39e00) !important;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(45deg, var(--danger-color), #a71d2a) !important;
+}
+
+.badge.bg-info {
+    background: linear-gradient(45deg, var(--info-color), #0c7c9c) !important;
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(45deg, var(--secondary-color), #545b62) !important;
+}
+
+/* Button group styles for appointment actions */
+.btn-group .btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+    border: none;
+}
+
+    .btn-group .btn:focus {
+        box-shadow: none !important;
+    }
+
+/* Responsive adjustments for appointment cards */
+@media (max-width: 768px) {
+    .appointment-card .btn-group {
+        flex-direction: column;
+    }
+
+        .appointment-card .btn-group .btn {
+            border-radius: 0.375rem !important;
+            margin-bottom: 0.25rem;
+        }
+
+            .appointment-card .btn-group .btn:first-child {
+                border-top-left-radius: 0.375rem !important;
+                border-top-right-radius: 0.375rem !important;
+            }
+
+            .appointment-card .btn-group .btn:last-child {
+                border-bottom-left-radius: 0.375rem !important;
+                border-bottom-right-radius: 0.375rem !important;
+                margin-bottom: 0;
+            }
+}
+
+/* Text truncation for long content */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Hover effects for filter buttons */
+.btn-outline-primary:hover,
+.btn-outline-info:hover,
+.btn-outline-secondary:hover,
+.btn-outline-danger:hover,
+.btn-outline-dark:hover {
+    transform: translateY(-1px);
+}
+
+/* Homepage specific styles */
+.hero-section {
+    background: linear-gradient(135deg, var(--medicare-blue) 0%, #0b5ed7 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="white"/></svg>');
+    background-size: 200px;
+    opacity: 0.1;
+}
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+
+.step-number {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats-item {
+    transition: transform 0.3s ease;
+}
+
+    .stats-item:hover {
+        transform: scale(1.05);
+    }
+
+/* Responsive adjustments for homepage */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+
+    .hero-section .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .stats-item {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Animation for elements */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.badge {
+    --bs-badge-color: #000000;
+}
+.timeSlotError {
+    color: darkred;
+    background-color:indianred;
+}

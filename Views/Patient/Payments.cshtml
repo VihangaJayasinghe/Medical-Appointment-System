@@ -1,0 +1,176 @@
+﻿@model List<MedicalAppointmentSystem.Models.Payment>
+@{
+    ViewData["Title"] = "My Payments";
+}
+
+<h2>My Payments</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h5>Payment History</h5>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Appointment Date</th>
+                            <th>Doctor</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Payment Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model)
+                        {
+                            <tr>
+                                <td>@(payment.Appointment?.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                <td>Dr. @(payment.Appointment?.Doctor?.User?.Name ?? "Unknown")</td>
+                                <td>$@payment.Amount</td>
+                                <td>
+                                    <span class="badge badge-@(payment.Status == "paid" ? "success" :
+                                                               payment.Status == "pending" ? "warning" :
+                                                               payment.Status == "failed" ? "danger" : "secondary")">
+                                        @payment.Status?.ToUpper()
+                                    </span>
+                                </td>
+                                <td>@(payment.Appointment?.AppointmentDate?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                                <td>
+                                    @if (payment.Status == "pending")
+                                    {
+                                        <form asp-action="MakePayment" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@payment.Id" />
+                                            <button type="submit" class="btn btn-success btn-sm"
+                                                    onclick="return confirm('Are you sure you want to process this payment?')">
+                                                Pay Now
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No actions</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Payment Summary -->
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h6>Total Paid</h6>
+                            <h4>$@Model.Where(p => p.Status == "paid").Sum(p => p.Amount)</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-warning">
+                        <div class="card-body text-center">
+                            <h6>Pending Payments</h6>
+                            <h4>$@Model.Where(p => p.Status == "pending").Sum(p => p.Amount)</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-info">
+                        <div class="card-body text-center">
+                            <h6>Total Payments</h6>
+                            <h4>@Model.Count</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No payments found</h5>
+                <p>You don't have any payment records yet.</p>
+                <a href="@Url.Action("SearchDoctors")" class="btn btn-primary">Book an Appointment</a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Payment Modal (for future enhancement) -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Process Payment</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-credit-card fa-4x text-primary mb-3"></i>
+                    <h4>Payment Simulation</h4>
+                    <p class="text-muted">This is a demo payment system. No real money will be processed.</p>
+
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" class="form-control" value="4242 4242 4242 4242" readonly>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Expiry Date</label>
+                                <input type="text" class="form-control" value="12/25" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" class="form-control" value="123" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="processPayment()">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showPaymentModal(paymentId) {
+            $('#paymentModal').data('payment-id', paymentId);
+            $('#paymentModal').modal('show');
+        }
+
+        function processPayment() {
+            var paymentId = $('#paymentModal').data('payment-id');
+            // Submit the form
+            $('#paymentForm-' + paymentId).submit();
+        }
+
+        $(document).ready(function() {
+            // Enable tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="text-center">
+            <h1 class="display-4">Welcome, Admin!</h1>
+            <p class="lead">Medical Appointment System Administration Panel</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body text-center">
+                <i class="fas fa-user-md fa-3x mb-2"></i>
+                <h5>Manage Doctors</h5>
+                <p>Add, edit, and remove doctors</p>
+                <a href="@Url.Action("Doctors")" class="btn btn-light">Go to Doctors</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-2"></i>
+                <h5>View Patients</h5>
+                <p>Manage patient accounts</p>
+                <a href="@Url.Action("Patients")" class="btn btn-light">Go to Patients</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-3x mb-2"></i>
+                <h5>Reports</h5>
+                <p>View system statistics</p>
+                <a href="@Url.Action("Reports")" class="btn btn-light">View Reports</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body text-center">
+                <i class="fas fa-cog fa-3x mb-2"></i>
+                <h5>System Settings</h5>
+                <p>Configure system options</p>
+                <a href="#" class="btn btn-light">Settings</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="@Url.Action("AddDoctor")" class="btn btn-primary btn-block mb-2">
+                            <i class="fas fa-plus"></i> Add New Doctor
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="@Url.Action("Doctors")" class="btn btn-secondary btn-block mb-2">
+                            <i class="fas fa-list"></i> View All Doctors
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="@Url.Action("Reports")" class="btn btn-info btn-block mb-2">
+                            <i class="fas fa-chart-line"></i> Generate Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
